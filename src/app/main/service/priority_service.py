@@ -1,11 +1,15 @@
 from app.main import db
 from app.main.model.board import Priority
-
+from app.main.service.response import get_response
 
 def get_priority():
     priority_data = Priority.query.all()
     priority_list = map_priority_data(priority_data)
     return priority_list
+
+def get_all_priority():
+    priority = get_priority()
+    return get_response(200, "", priority)
 
 def map_priority_data(data):
     priority_list = []
