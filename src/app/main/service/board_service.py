@@ -6,9 +6,12 @@ from app.main.service.priority_service import get_priority
 from app.main.service.status_service import get_status
 from app.main import db
 from app.main.model.board import Board, Task, Label, Priority
-
+from ..service import validator
 
 def add_board(data):
+    not_valid = validator.validate_add_board(data)
+    if not_valid:
+        return not_valid
     new_board = Board(
         name = data['name'],
         user_id = data['user_id']
@@ -17,11 +20,17 @@ def add_board(data):
     return get_response(200, "{} board created".format(data['name']), []), 200
 
 def get_all_boards(data):
+    not_valid = validator.validate_get_all_boards(data)
+    if not_valid:
+        return not_valid
     board_data = Board.query.filter_by(user_id=data['user_id']).all()
     board_details_list = map_board_data(board_data)
     return get_response(200, "", board_details_list), 200
 
 def get_board(board_id, data):
+    not_valid = validator.validate_get_board(data)
+    if not_valid:
+        return not_valid
     task_data = Task.query.filter_by(user_id=data['user_id'], board_id=board_id).all()
     task_details_list = map_task_data(task_data)
     data = {
@@ -33,6 +42,9 @@ def get_board(board_id, data):
     return get_response(200, "", data), 200
 
 def delete_board(board_id, data):
+    not_valid = validator.validate_delete_board(data)
+    if not_valid:
+        return not_valid
     Task.query.filter_by(user_id=data['user_id'], board_id=board_id).delete()
     Board.query.filter_by(user_id=data['user_id'], id=board_id).delete()
     db.session.commit()
