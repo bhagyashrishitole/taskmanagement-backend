@@ -19,7 +19,10 @@ class Task(db.Model):
     board_id = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(255), nullable=False)
     priority = db.Column(db.String(255), nullable=True)
-    label = db.Column(db.String(255), nullable=True)
+    label_personal = db.Column(db.String(255), nullable=True)
+    label_work = db.Column(db.String(255), nullable=True)
+    label_shopping = db.Column(db.String(255), nullable=True)
+    label_others = db.Column(db.String(255), nullable=True)
     desc = db.Column(db.String(255), nullable=True)
     creation_date = db.Column(db.DateTime, nullable=False)
     update_date = db.Column(db.DateTime, nullable=False)
@@ -46,6 +49,15 @@ class Priority(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
 
+# class TaskLabel(db.Model):
+#     """ Label Model for storing task label related details """
+#     __tablename__ = "task_label"
+#
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     task_id = db.Column(db.Integer, autoincrement=True)
+#     label_name = db.Column(db.String(255), nullable=False)
+
+
 class User(db.Model):
     """User Model for storing user related details"""
     __tablename__ = "user"
@@ -53,6 +65,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
+
 
 
 

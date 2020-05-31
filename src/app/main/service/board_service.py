@@ -8,6 +8,7 @@ from app.main import db
 from app.main.model.board import Board, Task, Label, Priority
 from ..service import validator
 
+
 def add_board(data):
     not_valid = validator.validate_add_board(data)
     if not_valid:
@@ -19,6 +20,7 @@ def add_board(data):
     save_changes(new_board)
     return get_response(200, "{} board created".format(data['name']), []), 200
 
+
 def get_all_boards(data):
     not_valid = validator.validate_get_all_boards(data)
     if not_valid:
@@ -26,6 +28,7 @@ def get_all_boards(data):
     board_data = Board.query.filter_by(user_id=data['user_id']).all()
     board_details_list = map_board_data(board_data)
     return get_response(200, "", board_details_list), 200
+
 
 def get_board(board_id, data):
     not_valid = validator.validate_get_board(data)
@@ -41,6 +44,7 @@ def get_board(board_id, data):
     }
     return get_response(200, "", data), 200
 
+
 def delete_board(board_id, data):
     not_valid = validator.validate_delete_board(data)
     if not_valid:
@@ -52,12 +56,20 @@ def delete_board(board_id, data):
 
 
 def add_task_for_board(board_id, data):
+    d ={}
+    for each in data.get("label"):
+        d[each] = each
+
     new_task = Task(
         title = data['title'],
         board_id = board_id,
         user_id = data['user_id'],
         status = data['status'],
-        desc  = data.get('desc'),
+        desc = data.get('desc'),
+        label_personal = "Personal" if "Personal" in data["label"] else None,
+        label_work="Work" if "Work" in data["label"] else None,
+        label_shopping="Shopping" if "Shopping" in data["label"] else None,
+        label_others="Others" if "Others" in data["label"] else None,
         priority = data.get('priority'),
         creation_date = datetime.datetime.utcnow(),
         update_date = datetime.datetime.utcnow()
@@ -94,6 +106,16 @@ def map_task_data(task_data):
         task = {}
         task["id"] = each.id
         task["title"] = each.title
+        task["labels"] = []
+        if each.label_personal:
+            task["labels"].append(each.label_personal)
+        if each.label_work:
+            task["labels"].append(each.label_work)
+        if each.label_shopping:
+            task["labels"].append(each.label_shopping)
+        if each.label_others:
+            task["labels"].append(each.label_others)
+
         task["desc"] = each.desc
         task["board_id"] = each.board_id
         task["status"] = each.status
