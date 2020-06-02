@@ -14,8 +14,8 @@ def add_board(data):
     if not_valid:
         return not_valid
     new_board = Board(
-        name = data['name'],
-        user_id = data['user_id']
+        name=data['name'],
+        user_id=data['user_id']
     )
     save_changes(new_board)
     return get_response(200, "{} board created".format(data['name']), []), 200
@@ -34,7 +34,7 @@ def get_board(board_id, data):
     not_valid = validator.validate_get_board(data)
     if not_valid:
         return not_valid
-    task_data = Task.query.filter_by(user_id=data['user_id'], board_id=board_id).all()
+    task_data = Task.query.filter_by(user_id=data['user_id'], board_id=board_id, is_archived=False).all()
     task_details_list = map_task_data(task_data)
     data = {
         "tasks": task_details_list,
@@ -56,26 +56,24 @@ def delete_board(board_id, data):
 
 
 def add_task_for_board(board_id, data):
-    d ={}
-    for each in data.get("label"):
-        d[each] = each
-
+    labels = data.get("label") if data.get("label") else []
     new_task = Task(
-        title = data['title'],
-        board_id = board_id,
-        user_id = data['user_id'],
-        status = data['status'],
-        desc = data.get('desc'),
-        label_personal = "Personal" if "Personal" in data["label"] else None,
-        label_work="Work" if "Work" in data["label"] else None,
-        label_shopping="Shopping" if "Shopping" in data["label"] else None,
-        label_others="Others" if "Others" in data["label"] else None,
-        priority = data.get('priority'),
-        creation_date = datetime.datetime.utcnow(),
-        update_date = datetime.datetime.utcnow()
+        title=data['title'],
+        board_id=board_id,
+        user_id=data['user_id'],
+        status=data['status'],
+        desc=data.get('desc'),
+        label_personal="Personal" if "Personal" in labels else None,
+        label_work="Work" if "Work" in labels else None,
+        label_shopping="Shopping" if "Shopping" in labels else None,
+        label_others="Others" if "Others" in labels else None,
+        priority=data.get('priority'),
+        creation_date=datetime.datetime.utcnow(),
+        update_date=datetime.datetime.utcnow()
     )
     save_changes(new_task)
     return get_response(200, "{} task created".format(data['title']), []), 200
+
 
 def get_task(board_id, task_id, data):
     task_data = Task.query.filter_by(id=task_id, board_id=board_id, user_id=data["user_id"]).all()
@@ -86,12 +84,15 @@ def get_task(board_id, task_id, data):
 
     return get_response(200, "", data), 200
 
+
 def update_task_for_board(board_id, task_id, data):
     not_valid = validator.validate_update_task_for_board(data)
     if not_valid:
         return not_valid
     task_data = Task.query.filter_by(id=task_id, board_id=board_id, user_id=data["user_id"]).first()
     if task_data:
+        if data.get("is_archived") is not None:
+            task_data.is_archived = data.get("is_archived")
         if data.get("due_date"):
             task_data.due_date = datetime.datetime.strptime(data.get("due_date"), "%m/%d/%Y, %H:%M:%S")
         if data.get("status"):
@@ -99,19 +100,19 @@ def update_task_for_board(board_id, task_id, data):
         if data.get("priority"):
             task_data.priority = data.get("priority")
         if data.get("label"):
-            labels = []
-            if task_data.label_personal:
-                labels.append(task_data.label_personal)
-            if task_data.label_work:
-                labels.append(task_data.label_work)
-            if task_data.label_shopping:
-                labels.append(task_data.label_shopping)
-            if task_data.label_others:
-                labels.append(task_data.label_others)
-
-            for i in range(len(data.get("label"))):
-                if data["label"][i] not in labels:
-                    labels.append(data.get("label")[i])
+            labels = data.get("label")
+            # if task_data.label_personal:
+            #     labels.append(task_data.label_personal)
+            # if task_data.label_work:
+            #     labels.append(task_data.label_work)
+            # if task_data.label_shopping:
+            #     labels.append(task_data.label_shopping)
+            # if task_data.label_others:
+            #     labels.append(task_data.label_others)
+            #
+            # for i in range(len(data.get("label"))):
+            #     if data["label"][i] not in labels:
+            #         labels.append(data.get("label")[i])
 
             task_data.label_personal = "Personal" if "Personal" in labels else None
             task_data.label_work = "Work" if "Work" in labels else None
@@ -126,9 +127,6 @@ def update_task_for_board(board_id, task_id, data):
 
 
 def archive_task_for_board(board_id, task_id, data):
-    not_valid = validator.validate_archive_task_for_board(data)
-    if not_valid:
-        return not_valid
     task_data = Task.query.filter_by(id=task_id, board_id=board_id, user_id=data["user_id"]).first()
     if task_data:
         task_data.is_archived = True
@@ -142,6 +140,7 @@ def save_changes(data):
     db.session.add(data)
     db.session.commit()
 
+
 def map_board_data(board_data):
     board_details_list = []
     for each in board_data:
@@ -150,6 +149,7 @@ def map_board_data(board_data):
         board["name"] = each.name
         board_details_list.append(board)
     return board_details_list
+
 
 def map_task_data(task_data):
     task_details_list = []
@@ -174,11 +174,9 @@ def map_task_data(task_data):
         task["creation_date"] = each.creation_date.strftime("%m/%d/%Y, %H:%M:%S")
         if each.due_date:
             task["due_date"] = each.due_date.strftime("%m/%d/%Y, %H:%M:%S")
-        # task["due_date"] = each.due_date
+        else:
+            task["due_date"] = each.due_date
         task["update_date"] = each.update_date.strftime("%m/%d/%Y, %H:%M:%S")
         task["is_archived"] = each.is_archived
         task_details_list.append(task)
     return task_details_list
-
-
-
