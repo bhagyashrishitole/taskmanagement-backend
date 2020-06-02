@@ -86,6 +86,57 @@ def get_task(board_id, task_id, data):
 
     return get_response(200, "", data), 200
 
+def update_task_for_board(board_id, task_id, data):
+    not_valid = validator.validate_update_task_for_board(data)
+    if not_valid:
+        return not_valid
+    task_data = Task.query.filter_by(id=task_id, board_id=board_id, user_id=data["user_id"]).first()
+    if task_data:
+        if data.get("due_date"):
+            task_data.due_date = datetime.datetime.strptime(data.get("due_date"), "%m/%d/%Y, %H:%M:%S")
+        if data.get("status"):
+            task_data.status = data.get("status")
+        if data.get("priority"):
+            task_data.priority = data.get("priority")
+        if data.get("label"):
+            labels = []
+            if task_data.label_personal:
+                labels.append(task_data.label_personal)
+            if task_data.label_work:
+                labels.append(task_data.label_work)
+            if task_data.label_shopping:
+                labels.append(task_data.label_shopping)
+            if task_data.label_others:
+                labels.append(task_data.label_others)
+
+            for i in range(len(data.get("label"))):
+                if data["label"][i] not in labels:
+                    labels.append(data.get("label")[i])
+
+            task_data.label_personal = "Personal" if "Personal" in labels else None
+            task_data.label_work = "Work" if "Work" in labels else None
+            task_data.label_shopping = "Shopping" if "Shopping" in labels else None
+            task_data.label_others = "Others" if "Others" in labels else None
+
+        task_data.update_date = datetime.datetime.utcnow()
+        db.session.commit()
+        return get_response(200, "{} task updated.".format(task_data.title), []), 200
+    else:
+        return get_response(404, "{} task didn't found.".format(task_id), []), 404
+
+
+def archive_task_for_board(board_id, task_id, data):
+    not_valid = validator.validate_archive_task_for_board(data)
+    if not_valid:
+        return not_valid
+    task_data = Task.query.filter_by(id=task_id, board_id=board_id, user_id=data["user_id"]).first()
+    if task_data:
+        task_data.is_archived = True
+        db.session.commit()
+        return get_response(200, "{} task archived.".format(task_data.title), []), 200
+    else:
+        return get_response(404, "{} task didn't found.".format(task_id), []), 404
+
 
 def save_changes(data):
     db.session.add(data)
@@ -123,7 +174,7 @@ def map_task_data(task_data):
         task["creation_date"] = each.creation_date.strftime("%m/%d/%Y, %H:%M:%S")
         if each.due_date:
             task["due_date"] = each.due_date.strftime("%m/%d/%Y, %H:%M:%S")
-        task["due_date"] = each.due_date
+        # task["due_date"] = each.due_date
         task["update_date"] = each.update_date.strftime("%m/%d/%Y, %H:%M:%S")
         task["is_archived"] = each.is_archived
         task_details_list.append(task)

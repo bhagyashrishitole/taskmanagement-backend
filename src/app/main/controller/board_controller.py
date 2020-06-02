@@ -53,4 +53,19 @@ class Board(Resource):
         data = request.json
         return board_service.get_task(board_id = int(board_id), task_id=task_id, data=data)
 
+@api.route('/<board_id>/tasks/<task_id>')
+class Board(Resource):
+    @api.doc('Update task under board')
+    def put(self, board_id, task_id):
+        """update single task details"""
+        data = request.json
+        return board_service.update_task_for_board(board_id = int(board_id), task_id=task_id, data=data)
+
+@api.route('/<board_id>/tasks/<task_id>')
+class Board(Resource):
+    @api.doc('Archive task under board')
+    def delete(self, board_id, task_id):
+        """archive single task details"""
+        data = request.json
+        return board_service.archive_task_for_board(board_id = int(board_id), task_id=task_id, data=data)
 

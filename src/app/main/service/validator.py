@@ -17,3 +17,11 @@ def validate_get_board(data):
 def validate_get_all_boards(data):
     if not data.get("user_id"):
         return get_response(400, "'user_id' field missing in the request", []), 400
+
+def validate_update_task_for_board(data):
+    if not data.get("user_id"):
+        return get_response(400, "'user_id' field missing in the request", []), 400
+
+def validate_archive_task_for_board(data):
+    if not data.get("user_id"):
+        return get_response(400, "'user_id' field missing in the request", []), 400
