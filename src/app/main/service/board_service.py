@@ -131,21 +131,12 @@ def update_task_for_board(board_id, task_id, data):
             task_data.status = data.get("status")
         if data.get("priority"):
             task_data.priority = data.get("priority")
+        if data.get("title"):
+            task_data.title = data['title']
+        if data.get("desc"):
+            task_data.desc = data['desc']
         if data.get("label"):
             labels = data.get("label")
-            # if task_data.label_personal:
-            #     labels.append(task_data.label_personal)
-            # if task_data.label_work:
-            #     labels.append(task_data.label_work)
-            # if task_data.label_shopping:
-            #     labels.append(task_data.label_shopping)
-            # if task_data.label_others:
-            #     labels.append(task_data.label_others)
-            #
-            # for i in range(len(data.get("label"))):
-            #     if data["label"][i] not in labels:
-            #         labels.append(data.get("label")[i])
-
             task_data.label_personal = "Personal" if "Personal" in labels else None
             task_data.label_work = "Work" if "Work" in labels else None
             task_data.label_shopping = "Shopping" if "Shopping" in labels else None
