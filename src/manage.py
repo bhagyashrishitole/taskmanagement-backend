@@ -7,8 +7,8 @@ from app.main.model import board
 from app import blueprint
 from app.main import create_app, db
 
-app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
-app.register_blueprint(blueprint)
+app = create_app(os.getenv('TASK_MGMT_ENV') or 'dev')
+app.register_blueprint(blueprint, url_prefix="/api")
 
 app.app_context().push()
 

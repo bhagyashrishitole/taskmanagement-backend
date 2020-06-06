@@ -10,6 +10,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    # SERVER_NAME = "127.0.0.1:4000"
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'task_management.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
