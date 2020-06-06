@@ -75,7 +75,7 @@ def add_task_for_board(board_id, data):
     return get_response(200, "{} task created".format(data['title']), []), 200
 
 def get_filtered_task(board_id, data):
-    query = Task.query.filter_by(board_id=board_id, user_id=data["user_id"])
+    query = Task.query.filter_by(board_id=board_id, user_id=data["user_id"], is_archived=False)
     if data.get("status"):
         query = query.filter_by(status=data["status"])
 
@@ -84,10 +84,21 @@ def get_filtered_task(board_id, data):
     if data.get("query"):
         query =  query.filter((Task.title.like("%{}%".format(data["query"])))|
                               (Task.desc.like("%{}%".format(data["query"]))))
-    print(data)
-    # if data.get("label"):
-    #     print("label", data.get("label"))
-    #     query = query.filter(Task.label.in_(data["label"]))
+    if data.get("to") and data.get("from"):
+        to_date = datetime.datetime.strptime(data.get("to"), "%m/%d/%Y, %H:%M:%S")
+        from_date = datetime.datetime.strptime(data.get("from"), "%m/%d/%Y, %H:%M:%S")
+        query = query.filter(Task.due_date.between(from_date, to_date))
+
+    if data.get("label"):
+        label = data["label"]
+        if label == "Personal":
+            query = query.filter_by(label_personal=label)
+        if label == "Work":
+            query = query.filter_by(label_work=label)
+        if label == "Shopping":
+            query = query.filter_by(label_shopping=label)
+        if label == "Others":
+            query = query.filter_by(label_others=label)
     print(query)
     task_data = query.all()
     task_details_list = map_task_data(task_data)

@@ -65,7 +65,7 @@ class Board(Resource):
         data["priority"] = request.args.get('priority')
         data["to"] = request.args.get('to')
         data["from"] = request.args.get('from')
-        print(request.args.get('label'))
+        data["label"] = request.args.get('label')
         return board_service.get_filtered_task(board_id=int(board_id), data=data)
 
 
