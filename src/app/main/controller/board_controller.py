@@ -68,6 +68,14 @@ class Board(Resource):
         data["label"] = request.args.get('label')
         return board_service.get_filtered_task(board_id=int(board_id), data=data)
 
+@api.route('/<board_id>/search')
+class Board(Resource):
+    @api.doc('search for tasks under board')
+    def post(self, board_id):
+        """search for tasks"""
+        data = request.json
+        data["user_id"] = 101
+        return board_service.search_tasks(board_id=int(board_id), data=data)
 
 @api.route('/<board_id>/tasks/<task_id>')
 class Board(Resource):

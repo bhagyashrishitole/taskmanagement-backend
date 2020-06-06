@@ -165,6 +165,37 @@ def archive_task_for_board(board_id, task_id, data):
         return get_response(404, "{} task didn't found.".format(task_id), []), 404
 
 
+def search_tasks(board_id, data):
+    query = Task.query.filter_by(board_id=board_id, user_id=data["user_id"], is_archived=False)
+    if data.get("status"):
+        query = query.filter_by(status=data["status"])
+
+    if data.get("priority"):
+        query = query.filter_by(priority=data["priority"])
+    if data.get("query"):
+        query = query.filter((Task.title.like("%{}%".format(data["query"]))) |
+                             (Task.desc.like("%{}%".format(data["query"]))))
+    if data.get("to") and data.get("from"):
+        to_date = datetime.datetime.strptime(data.get("to"), "%m/%d/%Y, %H:%M:%S")
+        from_date = datetime.datetime.strptime(data.get("from"), "%m/%d/%Y, %H:%M:%S")
+        query = query.filter(Task.due_date.between(from_date, to_date))
+
+    if data.get("label"):
+        label = data["label"]
+        if label == "Personal":
+            query = query.filter_by(label_personal=label)
+        if label == "Work":
+            query = query.filter_by(label_work=label)
+        if label == "Shopping":
+            query = query.filter_by(label_shopping=label)
+        if label == "Others":
+            query = query.filter_by(label_others=label)
+    print(query)
+    task_data = query.all()
+    task_details_list = map_task_data(task_data)
+    return get_response(200, "", task_details_list), 200
+
+
 def save_changes(data):
     db.session.add(data)
     db.session.commit()
