@@ -11,26 +11,35 @@ class Board(Resource):
     @api.doc('add board')
     def post(self):
         """create board"""
-        data = request.json
-        data["user_id"] = 101
-        return board_service.add_board(data=data)
-
+        try:
+            data = request.json
+            data["user_id"] = 101
+            return board_service.add_board(data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
 @api.route('/<board_id>')
 class Board(Resource):
     @api.doc('get single board details')
     def get(self, board_id):
         """get single board details"""
-        data = {}
-        data["user_id"] = 101
-        return board_service.get_board(board_id=int(board_id), data=data)
+        try:
+            data = {"user_id": 101}
+            return board_service.get_board(board_id=int(board_id), data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
     @api.doc('get single board details')
     def delete(self, board_id):
         """get single board details"""
-        data = {}
-        data["user_id"] = 101
-        return board_service.delete_board(board_id=int(board_id), data=data)
+        try:
+            data = {"user_id": 101}
+            return board_service.delete_board(board_id=int(board_id), data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
 
 @api.route('/all')
@@ -38,9 +47,12 @@ class Board(Resource):
     @api.doc('get all board details')
     def get(self):
         """List all boards"""
-        data = {}
-        data["user_id"] = 101
-        return board_service.get_all_boards(data)
+        try:
+            data = {"user_id": 101}
+            return board_service.get_all_boards(data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
 
 """ Task APIs"""
@@ -51,51 +63,72 @@ class Board(Resource):
     @api.doc('Add task under board')
     def post(self, board_id):
         """get single board details"""
-        data = request.json
-        data["user_id"] = 101
-        return board_service.add_task_for_board(board_id=int(board_id), data=data)
+        try:
+            data = request.json
+            data["user_id"] = 101
+            return board_service.add_task_for_board(board_id=int(board_id), data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
     @api.doc('Get tasks under board')
     def get(self, board_id):
         """get board task based on filter"""
-        data = {}
-        data["user_id"] = 101
-        data["query"] = request.args.get('query')
-        data["status"] = request.args.get('status')
-        data["priority"] = request.args.get('priority')
-        data["to"] = request.args.get('to')
-        data["from"] = request.args.get('from')
-        data["label"] = request.args.get('label')
-        return board_service.get_filtered_task(board_id=int(board_id), data=data)
+        try:
+            data = {"user_id": 101}
+            data["query"] = request.args.get('query')
+            data["status"] = request.args.get('status')
+            data["priority"] = request.args.get('priority')
+            data["to"] = request.args.get('to')
+            data["from"] = request.args.get('from')
+            data["label"] = request.args.get('label')
+            return board_service.get_filtered_task(board_id=int(board_id), data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
 @api.route('/<board_id>/search')
 class Board(Resource):
     @api.doc('search for tasks under board')
     def post(self, board_id):
         """search for tasks"""
-        data = request.json
-        data["user_id"] = 101
-        return board_service.search_tasks(board_id=int(board_id), data=data)
+        try:
+            data = request.json
+            data["user_id"] = 101
+            return board_service.search_tasks(board_id=int(board_id), data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
 @api.route('/<board_id>/tasks/<task_id>')
 class Board(Resource):
     @api.doc('Get task under board')
     def get(self, board_id, task_id):
         """get single board details"""
-        data = {}
-        data["user_id"] = 101
-        return board_service.get_task(board_id=int(board_id), task_id=task_id, data=data)
+        try:
+            data = {"user_id": 101}
+            return board_service.get_task(board_id=int(board_id), task_id=task_id, data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
     @api.doc('Update task under board')
     def put(self, board_id, task_id):
         """update single task details"""
-        data = request.json
-        data["user_id"] = 101
-        return board_service.update_task_for_board(board_id=int(board_id), task_id=task_id, data=data)
+        try:
+            data = request.json
+            data["user_id"] = 101
+            return board_service.update_task_for_board(board_id=int(board_id), task_id=task_id, data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
 
     @api.doc('Archive task under board')
     def delete(self, board_id, task_id):
         """archive single task details"""
-        data = {}
-        data["user_id"] = 101
-        return board_service.archive_task_for_board(board_id=int(board_id), task_id=task_id, data=data)
+        try:
+            data = {"user_id": 101}
+            return board_service.archive_task_for_board(board_id=int(board_id), task_id=task_id, data=data)
+        except Exception as e:
+            return {'status': 500,
+                    'message': "Internal application error."}, 500
