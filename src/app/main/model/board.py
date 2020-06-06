@@ -9,6 +9,7 @@ class Board(db.Model):
     name = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.Integer, nullable=False)
 
+
 class Task(db.Model):
     """ Task Model for storing task related details """
     __tablename__ = "task"
@@ -29,34 +30,6 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime, nullable=True)
     is_archived = db.Column(db.Boolean, nullable=False, default=False)
 
-class Status(db.Model):
-    """ Status Model for storing task status related details """
-    __tablename__ = "status"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False)
-
-class Label(db.Model):
-    """ Label Model for storing task label related details """
-    __tablename__ = "label"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False)
-
-class Priority(db.Model):
-    __tablename__ = "priority"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False)
-
-# class TaskLabel(db.Model):
-#     """ Label Model for storing task label related details """
-#     __tablename__ = "task_label"
-#
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     task_id = db.Column(db.Integer, autoincrement=True)
-#     label_name = db.Column(db.String(255), nullable=False)
-
 
 class User(db.Model):
     """User Model for storing user related details"""
@@ -65,15 +38,3 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
-
-
-
-
-
-
-    # email = db.Column(db.String(255), unique=True, nullable=False)
-    # registered_on = db.Column(db.DateTime, nullable=False)
-    # admin = db.Column(db.Boolean, nullable=False, default=False)
-    # public_id = db.Column(db.String(100), unique=True)
-    # username = db.Column(db.String(50), unique=True)
-    # password_hash = db.Column(db.String(100))
