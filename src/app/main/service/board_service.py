@@ -85,8 +85,8 @@ def get_filtered_task(board_id, data):
         query =  query.filter((Task.title.like("%{}%".format(data["query"])))|
                               (Task.desc.like("%{}%".format(data["query"]))))
     if data.get("to") and data.get("from"):
-        to_date = datetime.datetime.strptime(data.get("to"), "%m/%d/%Y, %H:%M:%S")
-        from_date = datetime.datetime.strptime(data.get("from"), "%m/%d/%Y, %H:%M:%S")
+        to_date = datetime.datetime.strptime(data.get("to"), "%Y/%m/%d, %H:%M:%S")
+        from_date = datetime.datetime.strptime(data.get("from"), "%Y/%m/%d, %H:%M:%S")
         query = query.filter(Task.due_date.between(from_date, to_date))
 
     if data.get("label"):
@@ -123,7 +123,7 @@ def update_task_for_board(board_id, task_id, data):
         if data.get("is_archived") is not None:
             task_data.is_archived = data.get("is_archived")
         if data.get("due_date"):
-            task_data.due_date = datetime.datetime.strptime(data.get("due_date"), "%m/%d/%Y, %H:%M:%S")
+            task_data.due_date = datetime.datetime.strptime(data.get("due_date"), "%Y/%m/%d, %H:%M:%S")
         if data.get("status"):
             task_data.status = data.get("status")
         if data.get("priority"):
@@ -176,8 +176,8 @@ def search_tasks(board_id, data):
         query = query.filter((Task.title.like("%{}%".format(data["query"]))) |
                              (Task.desc.like("%{}%".format(data["query"]))))
     if data.get("to") and data.get("from"):
-        to_date = datetime.datetime.strptime(data.get("to"), "%m/%d/%Y, %H:%M:%S")
-        from_date = datetime.datetime.strptime(data.get("from"), "%m/%d/%Y, %H:%M:%S")
+        to_date = datetime.datetime.strptime(data.get("to"), "%Y/%m/%d, %H:%M:%S")
+        from_date = datetime.datetime.strptime(data.get("from"), "%Y/%m/%d, %H:%M:%S")
         query = query.filter(Task.due_date.between(from_date, to_date))
 
     if data.get("label"):
@@ -231,12 +231,12 @@ def map_task_data(task_data):
         task["board_id"] = each.board_id
         task["status"] = each.status
         task["priority"] = each.priority
-        task["creation_date"] = each.creation_date.strftime("%m/%d/%Y, %H:%M:%S")
+        task["creation_date"] = each.creation_date.strftime("%Y/%m/%d, %H:%M:%S")
         if each.due_date:
-            task["due_date"] = each.due_date.strftime("%m/%d/%Y, %H:%M:%S")
+            task["due_date"] = each.due_date.strftime("%Y/%m/%d, %H:%M:%S")
         else:
             task["due_date"] = each.due_date
-        task["update_date"] = each.update_date.strftime("%m/%d/%Y, %H:%M:%S")
+        task["update_date"] = each.update_date.strftime("%Y/%m/%d, %H:%M:%S")
         task["is_archived"] = each.is_archived
         task_details_list.append(task)
     return task_details_list
