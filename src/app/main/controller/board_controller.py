@@ -21,14 +21,14 @@ class Board(Resource):
     @api.doc('get single board details')
     def get(self, board_id):
         """get single board details"""
-        data = request.json
+        data = {}
         data["user_id"] = 101
         return board_service.get_board(board_id=int(board_id), data=data)
 
     @api.doc('get single board details')
     def delete(self, board_id):
         """get single board details"""
-        data = request.json
+        data = {}
         data["user_id"] = 101
         return board_service.delete_board(board_id=int(board_id), data=data)
 
@@ -38,7 +38,7 @@ class Board(Resource):
     @api.doc('get all board details')
     def get(self):
         """List all boards"""
-        data = request.json
+        data = {}
         data["user_id"] = 101
         return board_service.get_all_boards(data)
 
@@ -55,13 +55,26 @@ class Board(Resource):
         data["user_id"] = 101
         return board_service.add_task_for_board(board_id=int(board_id), data=data)
 
+    @api.doc('Get tasks under board')
+    def get(self, board_id):
+        """get board task based on filter"""
+        data = {}
+        data["user_id"] = 101
+        data["query"] = request.args.get('query')
+        data["status"] = request.args.get('status')
+        data["priority"] = request.args.get('priority')
+        data["to"] = request.args.get('to')
+        data["from"] = request.args.get('from')
+        print(request.args.get('label'))
+        return board_service.get_filtered_task(board_id=int(board_id), data=data)
+
 
 @api.route('/<board_id>/tasks/<task_id>')
 class Board(Resource):
-    @api.doc('Add task under board')
+    @api.doc('Get task under board')
     def get(self, board_id, task_id):
         """get single board details"""
-        data = request.json
+        data = {}
         data["user_id"] = 101
         return board_service.get_task(board_id=int(board_id), task_id=task_id, data=data)
 
@@ -75,6 +88,6 @@ class Board(Resource):
     @api.doc('Archive task under board')
     def delete(self, board_id, task_id):
         """archive single task details"""
-        data = request.json
+        data = {}
         data["user_id"] = 101
         return board_service.archive_task_for_board(board_id=int(board_id), task_id=task_id, data=data)

@@ -74,6 +74,24 @@ def add_task_for_board(board_id, data):
     save_changes(new_task)
     return get_response(200, "{} task created".format(data['title']), []), 200
 
+def get_filtered_task(board_id, data):
+    query = Task.query.filter_by(board_id=board_id, user_id=data["user_id"])
+    if data.get("status"):
+        query = query.filter_by(status=data["status"])
+
+    if data.get("priority"):
+        query = query.filter_by(priority=data["priority"])
+    if data.get("query"):
+        query =  query.filter((Task.title.like("%{}%".format(data["query"])))|
+                              (Task.desc.like("%{}%".format(data["query"]))))
+    print(data)
+    # if data.get("label"):
+    #     print("label", data.get("label"))
+    #     query = query.filter(Task.label.in_(data["label"]))
+    print(query)
+    task_data = query.all()
+    task_details_list = map_task_data(task_data)
+    return get_response(200, "", task_details_list), 200
 
 def get_task(board_id, task_id, data):
     task_data = Task.query.filter_by(id=task_id, board_id=board_id, user_id=data["user_id"]).all()
