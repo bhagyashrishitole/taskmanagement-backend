@@ -5,7 +5,7 @@ from app.main.service.label_service import get_label
 from app.main.service.priority_service import get_priority
 from app.main.service.status_service import get_status
 from app.main import db
-from app.main.model.board import Board, Task, Label, Priority
+from app.main.model.board import Board, Task
 from ..service import validator
 
 
@@ -72,7 +72,8 @@ def add_task_for_board(board_id, data):
         label_others="Others" if "Others" in labels else None,
         priority=data.get('priority'),
         creation_date=datetime.datetime.utcnow(),
-        update_date=datetime.datetime.utcnow()
+        update_date=datetime.datetime.utcnow(),
+		due_date = data.get('due_date')
     )
     save_changes(new_task)
     return get_response(200, "{} task created".format(data['title']), []), 200

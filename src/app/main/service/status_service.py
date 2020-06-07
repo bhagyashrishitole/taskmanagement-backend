@@ -1,4 +1,4 @@
-from app.main.model.board import Status
+# from app.main.model.board import Status
 from app.main.service.response import get_response
 
 

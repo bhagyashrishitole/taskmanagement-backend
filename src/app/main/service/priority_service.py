@@ -1,4 +1,4 @@
-from app.main.model.board import Priority
+# from app.main.model.board import Priority
 from app.main.service.response import get_response
 
 
