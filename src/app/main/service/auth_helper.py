@@ -18,7 +18,7 @@ class Auth:
                 }
                 return response_object, 401
         else:
-            return {"status": 404, "messegae": "Auth token missing"}, 404
+            return {"status": 401, "messegae": "Auth token missing"}, 401
     @staticmethod
     def login_user(data):
         try:
