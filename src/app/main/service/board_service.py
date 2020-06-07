@@ -5,9 +5,9 @@ from app.main.service.label_service import get_label
 from app.main.service.priority_service import get_priority
 from app.main.service.status_service import get_status
 from app.main import db
-from app.main.model.board import Board, Task, Label, Priority
+from app.main.model.board import Board, Task
 from ..service import validator
-
+from ..service.auth_helper import Auth
 
 def add_board(data):
     not_valid = validator.validate_add_board(data)
@@ -56,7 +56,7 @@ def delete_board(board_id, data):
 
 
 def add_task_for_board(board_id, data):
-    not_valid = validator.validate_add_board(data)
+    not_valid = validator.validate_add_task(data)
     if not_valid:
         return not_valid
     labels = data.get("label") if data.get("label") else []

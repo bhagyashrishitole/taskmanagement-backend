@@ -6,6 +6,8 @@ from .main.controller.board_controller import api as board_ns
 from .main.controller.status_controller import api as status_ns
 from .main.controller.priority_controller import api as priority_ns
 from .main.controller.label_controller import api as label_ns
+from .main.controller.auth_controller import api as auth_ns
+from .main.controller.user_controller import api as user_ns
 
 
 blueprint = Blueprint('api', __name__)
@@ -21,3 +23,5 @@ api.add_namespace(board_ns)
 api.add_namespace(status_ns)
 api.add_namespace(priority_ns)
 api.add_namespace(label_ns)
+api.add_namespace(auth_ns)
+api.add_namespace(user_ns)

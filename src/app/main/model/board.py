@@ -30,11 +30,3 @@ class Task(db.Model):
     due_date = db.Column(db.DateTime, nullable=True)
     is_archived = db.Column(db.Boolean, nullable=False, default=False)
 
-
-class User(db.Model):
-    """User Model for storing user related details"""
-    __tablename__ = "user"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)
