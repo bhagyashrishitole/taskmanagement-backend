@@ -1,4 +1,4 @@
-Create Bacic Setup 
+Create Basic Setup 
 
 1. Clone the repository from below URL:
    https://github.com/bhagyashrishitole/taskmanagement-backend
