@@ -10,7 +10,7 @@ def save_new_user(data):
     if not user:
         new_user = User(
             email=data['email'],
-            first_name = data.get("first_name"),
+            first_name=data.get("first_name"),
             last_name=data.get("last_name"),
             username=data['username'],
             password=data['password'],
@@ -30,8 +30,18 @@ def get_all_users():
     return User.query.all()
 
 
-def get_a_user(public_id):
-    return User.query.filter_by(public_id=public_id).first()
+def get_a_user(user_name):
+    user_data = User.query.filter_by(username=user_name).first()
+    return map_user_data(user_data)
+
+def map_user_data(data):
+    user = {}
+    user['id'] = data.id
+    user["email"] = data.email
+    user["username"] = data.username
+    user["first_name"] = data.first_name
+    user["last_name"] = data.last_name
+    return user
 
 
 def generate_token(user):
@@ -55,4 +65,3 @@ def generate_token(user):
 def save_changes(data):
     db.session.add(data)
     db.session.commit()
-
