@@ -1,4 +1,3 @@
-# from app.main.model.board import Label
 from app.main.service.response import get_response
 
 

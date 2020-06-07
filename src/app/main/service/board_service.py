@@ -56,7 +56,7 @@ def delete_board(board_id, data):
 
 
 def add_task_for_board(board_id, data):
-    not_valid = validator.validate_add_board(data)
+    not_valid = validator.validate_add_task(data)
     if not_valid:
         return not_valid
     labels = data.get("label") if data.get("label") else []
