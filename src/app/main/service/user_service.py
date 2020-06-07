@@ -7,7 +7,8 @@ from app.main.model.user import User
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
-    if not user:
+    user_name = User.query.filter_by(username=data["username"]).first()
+    if not user and not user_name:
         new_user = User(
             email=data['email'],
             first_name=data.get("first_name"),
