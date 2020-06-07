@@ -56,7 +56,7 @@ def delete_board(board_id, data):
 
 
 def add_task_for_board(board_id, data):
-    not_valid = validator.validate_add_board(data)
+    not_valid = validator.validate_add_task(data)
     if not_valid:
         return not_valid
     labels = data.get("label") if data.get("label") else []
@@ -73,7 +73,7 @@ def add_task_for_board(board_id, data):
         priority=data.get('priority'),
         creation_date=datetime.datetime.utcnow(),
         update_date=datetime.datetime.utcnow(),
-		due_date = data.get('due_date')
+		due_date = datetime.datetime.strptime(data.get("due_date"), "%Y/%m/%d") if data.get('due_date') else None
     )
     save_changes(new_task)
     return get_response(200, "{} task created".format(data['title']), []), 200
@@ -89,8 +89,8 @@ def get_filtered_task(board_id, data):
         query =  query.filter((Task.title.like("%{}%".format(data["query"])))|
                               (Task.desc.like("%{}%".format(data["query"]))))
     if data.get("to") and data.get("from"):
-        to_date = datetime.datetime.strptime(data.get("to"), "%Y/%m/%d, %H:%M:%S")
-        from_date = datetime.datetime.strptime(data.get("from"), "%Y/%m/%d, %H:%M:%S")
+        to_date = datetime.datetime.strptime(data.get("to"), "%Y/%m/%d")
+        from_date = datetime.datetime.strptime(data.get("from"), "%Y/%m/%d")
         query = query.filter(Task.due_date.between(from_date, to_date))
 
     if data.get("label"):
@@ -127,7 +127,7 @@ def update_task_for_board(board_id, task_id, data):
         if data.get("is_archived") is not None:
             task_data.is_archived = data.get("is_archived")
         if data.get("due_date"):
-            task_data.due_date = datetime.datetime.strptime(data.get("due_date"), "%Y/%m/%d, %H:%M:%S")
+            task_data.due_date = datetime.datetime.strptime(data.get("due_date"), "%Y/%m/%d")
         if data.get("status"):
             task_data.status = data.get("status")
         if data.get("priority"):
@@ -171,8 +171,8 @@ def search_tasks(board_id, data):
         query = query.filter((Task.title.like("%{}%".format(data["query"]))) |
                              (Task.desc.like("%{}%".format(data["query"]))))
     if data.get("to") and data.get("from"):
-        to_date = datetime.datetime.strptime(data.get("to"), "%Y/%m/%d, %H:%M:%S")
-        from_date = datetime.datetime.strptime(data.get("from"), "%Y/%m/%d, %H:%M:%S")
+        to_date = datetime.datetime.strptime(data.get("to"), "%Y/%m/%d")
+        from_date = datetime.datetime.strptime(data.get("from"), "%Y/%m/%d")
         query = query.filter(Task.due_date.between(from_date, to_date))
 
     if data.get("label"):
@@ -226,12 +226,12 @@ def map_task_data(task_data):
         task["board_id"] = each.board_id
         task["status"] = each.status
         task["priority"] = each.priority
-        task["creation_date"] = each.creation_date.strftime("%Y/%m/%d, %H:%M:%S")
+        task["creation_date"] = each.creation_date.strftime("%Y/%m/%d")
         if each.due_date:
-            task["due_date"] = each.due_date.strftime("%Y/%m/%d, %H:%M:%S")
+            task["due_date"] = each.due_date.strftime("%Y/%m/%d")
         else:
             task["due_date"] = each.due_date
-        task["update_date"] = each.update_date.strftime("%Y/%m/%d, %H:%M:%S")
+        task["update_date"] = each.update_date.strftime("%Y/%m/%d")
         task["is_archived"] = each.is_archived
         task_details_list.append(task)
     return task_details_list
