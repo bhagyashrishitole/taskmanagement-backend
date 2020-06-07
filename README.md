@@ -1,36 +1,39 @@
-To create venv
-python3 -m venv /path/to/new/virtual/environment
+Create Bacic Setup 
 
-To install required 
-pip install -r requirements.txt
+1. Clone the repository from below URL:
+   https://github.com/bhagyashrishitole/taskmanagement-backend
 
-$source venv/bin/activate
+2. Go to below directory to run backend app
+   > taskmanagement-backend\src
 
-Go to taskmanagement-backend\src to execute below db commands
+3. Install required libraries
+   > pip install -r requirements.txt
 
-python manage.py db init
-python manage.py db migrate
-python manage.py db upgrade
+4. To start with fresh database configuration 
+   4.1 You need to initiate db in our case it's migration directory 
+       python manage.py db init
+   4.2 To create migration scripts
+       python manage.py db migrate
+   4.3 To create db schema
+       python manage.py db upgrade
 
-Go to taskmanagement-backend\src\app\main directory - To access task_management.db
-[To execute some insert queries]
+Note: If db schema is changed or DDL/DML operations needs to be performed then execute 2.2 and 2.3 commands
 
-Run below command to use db
+5. To run actual backendup application execute below command.
+   > python manage.py run
 
-sqlite3 task_management.db
+Run Prepared Setup - with existing db[Recommended]
 
-insert into priority(name) values("High");
-insert into priority(name) values("Medium");
-insert into priority(name) values("Low");
+1. Clone the repository from below URL:
+   https://github.com/bhagyashrishitole/taskmanagement-backend
 
-insert into status(name) values("New");
-insert into status(name) values("InProgress");
-insert into status(name) values("Completed");
+2. Go to below directory to run backend app
+   > taskmanagement-backend\src
 
-insert into label(name) values("Personal");
-insert into label(name) values("Work");
-insert into label(name) values("Shopping");
-insert into label(name) values("Others");
+3. Install required libraries
+   > pip install -r requirements.txt
 
-Go to taskmanagement-backend\src to run application
-python manage.py run
+4. To run actual backendup application execute below command.
+   > python manage.py run
+
+Note: Database has already populated with required data. To use this db, please use existing user details to login.
